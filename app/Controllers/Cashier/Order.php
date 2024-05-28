@@ -5,6 +5,7 @@ namespace App\Controllers\Cashier;
 use App\Controllers\BaseController;
 use App\Models\DistributionModel;
 use App\Models\MenuModel;
+use App\Models\MyMythAuth;
 use App\Models\ProfileModel;
 use App\Models\TransactionModel;
 use Myth\Auth\Models\UserModel;
@@ -16,14 +17,15 @@ class Order extends BaseController
     private TransactionModel $transaction;
     private UserModel $user;
     private DistributionModel $distribution;
+    private MyMythAuth $myMythAuth;
 
     public function __construct()
     {
         $this->profile = new ProfileModel();
         $this->menu = new MenuModel();
-        $this->user = new UserModel();
         $this->transaction = new TransactionModel();
         $this->distribution = new DistributionModel();
+        $this->myMythAuth = new MyMythAuth();
     }
 
     public function checkOrder()
@@ -31,7 +33,7 @@ class Order extends BaseController
         $input = $this->request->getVar();
         $menu = $this->menu->getMenu();
         $name = $this->profile->where('id', 1)->first();
-        $user = $this->user->getUser(user()->id);
+        $user = $this->myMythAuth->getUser(user()->id);
         $distribution = $this->distribution->findAll();
 
         $lastCode = $this->transaction->selectMax('code')->get()->getRowArray();

@@ -9,76 +9,77 @@
             <div class="col-12 col-md-9">
                 <table class="table table-bordered table-striped table-responsive" id="tblCheckOrder" width="100%">
                     <thead>
-                        <tr>
-                            <th class="text-center" width="3%">No.</th>
-                            <th class="text-center">Nama Menu</th>
-                            <th class="text-center">Request</th>
-                            <th class="text-center" width="15%">Kategori</th>
-                            <th class="text-center" width="7">Diskon</th>
-                            <th class="text-center">Harga</th>
-                            <th class="text-center" width="7%">Jumlah</th>
-                            <th class="text-center">Sub Total</th>
-                        </tr>
+                    <tr>
+                        <th class="text-center" width="3%">No.</th>
+                        <th class="text-center">Nama Menu</th>
+                        <th class="text-center">Request</th>
+                        <th class="text-center" width="15%">Kategori</th>
+                        <th class="text-center" width="7">Diskon</th>
+                        <th class="text-center">Harga</th>
+                        <th class="text-center" width="7%">Jumlah</th>
+                        <th class="text-center">Sub Total</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        $total = 0;
-                        $no = 1;
-                        $count = 0;
-                        ?>
-                        <?php foreach ($menuId as $mId) : ?>
-                            <?php foreach ($menu as $x => $row) : ?>
-                                <?php if ($mId === $row->id) : ?>
-                                    <?php if ($row->discount != 0) : ?>
-                                        <?php
-                                        $diskon = ($row->discount / 100) * $row->sell;
-                                        $total += ($row->sell - $diskon) * $amount[$count]
-                                        ?>
-                                    <?php else : ?>
-                                        <?php $total += $row->sell * $amount[$count] ?>
-                                    <?php endif; ?>
-                                    <tr>
-                                        <td class="text-center"><?= $no++; ?></td>
-                                        <td><?= $row->name ?></td>
-                                        <?php if ($request[$count] !== ''): ?>
-                                            <td><?= $request[$count] ?></td>
-                                        <?php else: ?>
-                                            <td class="text-center">-</td>
-                                        <?php endif ?>
-                                        <td class="text-center"><?= $row->categoryName ?></td>
-                                        <td class="text-center"><?= $row->discount != 0 ? $row->discount . '%' : '-'; ?></td>
-                                        <td class="text-right">
-                                            <?php if ($row->discount != 0) : ?>
-                                                <del><?= number_format($row->sell, 0, ',', '.') ?></del>
-                                                <?php
-                                                $diskon = ($row->discount / 100) * $row->sell;
-                                                echo number_format($row->sell - $diskon, 0, ',', '.')
-                                                ?>
-                                            <?php else : ?>
-                                                <?= number_format($row->sell, 0, ',', '.') ?>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <?= $amount[$count] ?>
-                                        </td>
-                                        <td class="text-right">
-                                            <?php if ($row->discount != 0) : ?>
-                                                <?php
-                                                $diskon = ($row->discount / 100) * $row->sell;
-                                                echo rupiah(($row->sell - $diskon) * $amount[$count])
-                                                ?>
-                                            <?php else : ?>
-                                                <?= rupiah($row->sell * $amount[$count]) ?>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                    <?php $count++ ?>
+                    <?php
+                    $total = 0;
+                    $no = 1;
+                    $count = 0;
+                    ?>
+                    <?php foreach ($menuId as $mId) : ?>
+                        <?php foreach ($menu as $x => $row) : ?>
+                            <?php if ($mId === $row->id) : ?>
+                                <?php if ($row->discount != 0) : ?>
+                                    <?php
+                                    $diskon = ($row->discount / 100) * $row->sell;
+                                    $total += ($row->sell - $diskon) * $amount[$count]
+                                    ?>
+                                <?php else : ?>
+                                    <?php $total += $row->sell * $amount[$count] ?>
                                 <?php endif; ?>
-                            <?php endforeach; ?>
+                                <tr>
+                                    <td class="text-center"><?= $no++; ?></td>
+                                    <td><?= $row->name ?></td>
+                                    <?php if ($request[$count] !== ''): ?>
+                                        <td><?= $request[$count] ?></td>
+                                    <?php else: ?>
+                                        <td class="text-center">-</td>
+                                    <?php endif ?>
+                                    <td class="text-center"><?= $row->categoryName ?></td>
+                                    <td class="text-center"><?= $row->discount != 0 ? $row->discount . '%' : '-'; ?></td>
+                                    <td class="text-right">
+                                        <?php if ($row->discount != 0) : ?>
+                                            <del><?= number_format($row->sell, 0, ',', '.') ?></del>
+                                            <?php
+                                            $diskon = ($row->discount / 100) * $row->sell;
+                                            echo number_format($row->sell - $diskon, 0, ',', '.')
+                                            ?>
+                                        <?php else : ?>
+                                            <?= number_format($row->sell, 0, ',', '.') ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?= $amount[$count] ?>
+                                    </td>
+                                    <td class="text-right">
+                                        <?php if ($row->discount != 0) : ?>
+                                            <?php
+                                            $diskon = ($row->discount / 100) * $row->sell;
+                                            echo rupiah(($row->sell - $diskon) * $amount[$count])
+                                            ?>
+                                        <?php else : ?>
+                                            <?= rupiah($row->sell * $amount[$count]) ?>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php $count++ ?>
+                            <?php endif; ?>
                         <?php endforeach; ?>
+                    <?php endforeach; ?>
                     </tbody>
                 </table>
-                <table class="table" width="100%" style="border-left: 2px solid #DEE2E6; border-right: 2px solid #DEE2E6;">
+                <table class="table" width="100%"
+                       style="border-left: 2px solid #DEE2E6; border-right: 2px solid #DEE2E6;">
                     <thead>
                     <tr>
                         <th class="text-right font-weight-bold">Total</th>
@@ -207,7 +208,7 @@
             payOrder(val, e);
         })
 
-        $('.saveTransaction').submit(function(e) {
+        $('.saveTransaction').submit(function (e) {
             e.preventDefault();
 
             questionSweetAlert('Yakin', 'Mau melakukan proses pembayaran', 'question').then((result) => {
@@ -237,7 +238,7 @@
     }
 
     const saveOrder = (url, type, data) => {
-        setAjax(url, type, data, function() {
+        setAjax(url, type, data, function () {
             Swal.fire({
                 title: "<strong><u>Pembayaran Berhasil</u></strong>",
                 icon: "success",
@@ -248,8 +249,9 @@
                 if (result.isConfirmed) {
                     // Print invoice
                     alert('👉 Segera dibuat. Terima Kasih.....😁')
+                    window.location.href = "<?= route_to('indexCashier') ?>";
                 }
-            }) ;
+            });
             //simpleSweetAlert('success', 'Berhasil', 'Pembayaran dilakukan').then(() => {
             //    window.location.href = '<?php //= route_to("indexCashier") ?>//';
             //})
