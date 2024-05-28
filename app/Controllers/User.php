@@ -141,7 +141,7 @@ class User extends BaseController
             'activate_hash' => bin2hex(random_bytes(16))
         ];
 
-        if ($this->user->insert($data)) {
+        if ($this->myMythAuth->insert($data)) {
             $userId = $this->user->insertID();
 
             $this->userEmployee->save([
@@ -206,11 +206,11 @@ class User extends BaseController
 
             if (!$user) return $this->response->setJSON(failResponse(404, 'User not found'));
 
-            unlink('uploads/images/user/' . $user->image);
+            if (!empty($user->image)) unlink('uploads/images/user/' . $user->image);
 
             $this->userEmployee->where('user_id', $user->id)->delete();
 
-            $this->grous->where('user_id', $user->id)->delete();
+            $this->group->removeUserFromAllGroups(intval($user->id));
 
             $this->user->delete($id);
 

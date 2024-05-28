@@ -40,7 +40,7 @@ class Auth extends BaseConfig
         'username',
     ];
 
-    public array $personalFields = [];
+    public array $personalFields = ['image'];
 
     public int $maxSimilarity = 50;
 

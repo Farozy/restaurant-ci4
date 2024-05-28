@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class MyMythAuth extends Model
+//use CodeIgniter\Model;
+use Myth\Auth\Models\UserModel as MythModel;
+class MyMythAuth extends MythModel
 {
+    protected $allowedFields = [
+        'email', 'image', 'username', 'password_hash', 'reset_hash', 'reset_at', 'reset_expires', 'activate_hash',
+        'status', 'status_message', 'active', 'force_pass_reset', 'permissions', 'deleted_at',
+    ];
     public function removeGroupFromAllGroups(int $groupId)
     {
         return $this->db->table('auth_groups_permissions')

@@ -10,7 +10,7 @@ class UserValidation
 
         if (!$isUpdate) {
             $rules['employee_id'] = 'required';
-            $rules['image'] = ['max_size[image,1024]|is_image[image]|mime_in[image,image/jpg,image/jpeg,image/png]'];
+            $rules['image'] = 'max_size[image,1024]|is_image[image]|mime_in[image,image/jpg,image/jpeg,image/png]';
         }
 
         return $rules;
