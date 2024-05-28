@@ -55,11 +55,19 @@ class Login extends MythAuthController
         $type = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         if (!$this->auth->attempt([$type => $login, 'password' => $password], $remember)) {
-            return redirect()->back()->withInput()->with('error', $this->auth->error() ?? lang('Auth.badAttempt'));
+            $msgError = strip_tags($this->auth->error());
+            $firstPeriodPos = strpos($msgError, '.');
+            $shortMessage = substr($msgError, 0, $firstPeriodPos + 1);
+
+            return redirect()->back()->withInput()->with('error',  $shortMessage ?? lang('Auth.badAttempt'));
         }
 
         if ($this->auth->user()->force_pass_reset === true) {
             return redirect()->to(route_to('reset-password') . '?token=' . $this->auth->user()->reset_hash)->withCookies();
+        }
+
+        if (!$this->auth->user()->active) {
+            return redirect()->back()->withInput()->with('error', "Akun tidak aktif atau belum aktif");
         }
 
         if (in_groups('admin')) {
