@@ -27,7 +27,7 @@ class Transaction extends BaseController
         $transaction = $this->transaction->getTransaction();
 
         $data = [
-            'title' => 'Transaction',
+            'title' => 'Transaksi',
             'transaction' => $transaction
         ];
 

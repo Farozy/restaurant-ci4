@@ -12,8 +12,7 @@ class AuthSeeder extends Seeder
     {
         $groups = [
             ['name' => 'admin', 'description' => 'Admin'],
-            ['name' => 'cashier', 'description' => 'Cashier'],
-            ['name' => 'customer', 'description' => 'Customer']
+            ['name' => 'cashier', 'description' => 'Cashier']
         ];
 
         $this->db->table('auth_groups')->insertBatch($groups);

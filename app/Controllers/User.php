@@ -101,11 +101,16 @@ class User extends BaseController
     {
         $input = $this->request->getVar();
         $file = $this->request->getFile('image');
-        $employee = $this->employee->find($input['id_employee']);
+        $employee = $this->employee->find($input['employee_id']);
 
         if (!$this->validate($this->userValidation->rules(), $this->userValidation->messages)) {
             $this->validation->getErrors();
             return redirect()->back()->withInput();
+
+        }
+        if (!$employee) {
+            setFlashdata('error', 'Data karyawan tidak ditemukan');
+            return redirect()->back();
         }
 
         if ($file->getError() == 4) {
@@ -136,24 +141,22 @@ class User extends BaseController
             'activate_hash' => bin2hex(random_bytes(16))
         ];
 
-        $this->user->insert($data);
+        if ($this->user->insert($data)) {
+            $userId = $this->user->insertID();
 
-        $id_user = $this->user->selectMax('id')->first()->id;
+            $this->userEmployee->save([
+                'user_id' => $userId,
+                'employee_id' => $employee->id
+            ]);
 
-        $this->userEmployee->save([
-            'user_id' => $id_user,
-            'employee_id' => $employee->id
-        ]);
+            $this->group->addUserToGroup($userId, $input['group_id']);
 
-        $data_group = [
-            'group_id' => $input['group_id'],
-            'user_id' => $id_user
-        ];
-
-        $this->grous->insert($data_group);
-
-        session()->setFlashdata('save', 'Data user berhasil');
-        return redirect()->to('user');
+            setFlashdata('save', 'Data user berhasil');
+            return redirect()->to(route_to('indexUser'));
+        } else {
+            setFlashdata('error', 'Data user tidak disimpan');
+            return redirect()->back();
+        }
     }
 
     public function edit($id)
@@ -176,23 +179,22 @@ class User extends BaseController
     {
         $input = $this->request->getVar();
         $user = $this->user->find($input['id']);
-        $checkGroup = !empty($input['group_id']) ? $input['group_id'] : null;
 
-        if (!$this->validate($this->userValidation->rules($checkGroup, true), $this->userValidation->messages)) {
+        if (!$this->validate($this->userValidation->rules(true), $this->userValidation->messages)) {
             $this->validation->getErrors();
             return redirect()->back()->withInput();
         }
 
         if (!$user) {
-            session()->setFlashdata('error', 'Data user berhasil');
+            setFlashdata('error', 'Data user tidak ditemukan');
             return redirect()->back();
         }
 
-        $this->grous->set('group_id', $input['group_id']);
-        $this->grous->where('user_id', $user->id)->update();
+        $this->group->removeUserFromAllGroups(intval($user->id));
+        $this->group->addUserToGroup(intval($user->id), $input['group_id']);
 
-        session()->setFlashdata('update', 'Data user berhasil');
-        return redirect()->to('user');
+        setFlashdata('update', 'Data user berhasil');
+        return redirect()->to(route_to('indexUser'));
     }
 
     public function delete()
@@ -246,7 +248,7 @@ class User extends BaseController
 
         $data = [
             'title' => 'Detail Data User',
-            'user' => $this->user->get_data_users($id),
+            'user' => $this->myMythAuth->getUser($id),
             'group' => $this->group->findAll(),
         ];
 
@@ -276,121 +278,6 @@ class User extends BaseController
         ]);
     }
 
-    public function UbahPassword()
-    {
-        if ($this->request->isAjax()) {
-
-            $id = $this->request->getVar('id');
-
-            $data = [
-                'title' => 'Ubah Passwords',
-                'user' => $this->user->find($id),
-            ];
-
-            $msg = [
-                'data' => view('user / ubah_pass', $data)
-            ];
-
-            return $this->response->setJSON($msg);
-        } else {
-            return redirect()->back();
-        }
-    }
-
-    public function simpanUbahPassword()
-    {
-        if ($this->request->isAjax()) {
-
-            $id = $this->request->getVar('id');
-            $passwordLama = $this->request->getVar('passwordLama');
-            $passwordBaru = $this->request->getVar('passwordBaru');
-            $passwordUlang = $this->request->getVar('passwordUlang');
-
-            $user = $this->user->where('id', $id)->first();
-
-            $oldPass = $this->validate([
-                'passwordLama' => [
-                    'rules' => 'trim | required',
-                    'errors' => [
-                        'required' => 'Field password lama harus diisi'
-                    ]
-                ]
-            ]);
-
-            if ($oldPass) {
-                if (Password::verify($passwordLama, $user->password_hash)) {
-
-                    $password_baru = Password::hash($passwordBaru);
-
-                    $newPass = $this->validate([
-                        'passwordBaru' => [
-                            'rules' => 'trim | required | min_length[3] | matches[passwordUlang]',
-                            'errors' => [
-                                'required' => 'Field password Baru harus diisi',
-                                'min_length' => 'Min . 3 karakter untuk password',
-                                'matches' => 'Passwords yang dimasukkan tidak cocok'
-                            ]
-                        ],
-                        'passwordUlang' => [
-                            'rules' => 'trim | required | matches[passwordBaru]',
-                            'errors' => [
-                                'required' => 'Field ulangi password harus diisi',
-                                'matches' => 'Passwords yang dimasukkan tidak cocok'
-                            ]
-                        ],
-                    ]);
-
-                    if ($newPass) {
-                        if (Password::verify($passwordBaru, $user->password_hash)) {
-                            $msg = [
-                                'data' => [
-                                    'icon' => 'error',
-                                    'text' => 'Passwords baru tidak boleh sama dengan password lama'
-                                ]
-                            ];
-                        } else {
-                            unset($passwordUlang);
-
-                            $this->user->update_user(['id' => $id], ['password_hash' => $password_baru]);
-
-                            $msg = [
-                                'data' => [
-                                    'icon' => 'success',
-                                    'text' => 'Passwords berhasil diubah',
-                                    'view' => view('user / data', ['title' => 'User'])
-                                ]
-                            ];
-                        }
-                    } else {
-                        $msg = [
-                            'errors' => [
-                                'passwordBaru' => $this->validation->getError('passwordBaru'),
-                                'passwordUlang' => $this->validation->getError('passwordUlang'),
-                            ]
-                        ];
-                    }
-                } else {
-                    $msg = [
-                        'data' => [
-                            'icon' => 'error',
-                            'text' => 'Passwords Lama Salah'
-                        ]
-                    ];
-                }
-            } else {
-                $msg = [
-                    'errors' => [
-                        'passwordLama' => $this->validation->getError('passwordLama'),
-                    ]
-                ];
-            }
-
-            return $this->response->setJSON($msg);
-        } else {
-            return redirect()->back();
-        }
-    }
-
     public function resetPassword()
     {
         if (!$this->request->isAjax()) {
@@ -402,65 +289,12 @@ class User extends BaseController
 
         if (!$user) return $this->response->setJSON(failResponse(404, 'User not found'));
 
-        $newPass = Password::hash($user->username);
+        $newPassword = Password::hash($user->username);
 
-
-        $this->user->update_user(['id' => $id], ['password_hash' => $newPass]);
+        $this->user->update(['id' => $id], ['password_hash' => $newPassword]);
 
         return $this->response->setJSON([
             view('user/data', ['title' => 'User'])
         ]);
-    }
-
-    public function saveGroupUsers()
-    {
-        if ($this->request->isAjax()) {
-
-            $input = $this->request->getVar();
-            $group = $this->group->findAll();
-
-            $groupId = 0;
-            foreach ($group as $row) {
-                if ($row['name'] == str_replace(' ', '_', $input['label'])) {
-                    $groupId = $row['id'];
-                }
-            }
-
-            $data_group = [
-                'group_id' => $groupId,
-                'user_id' => $input['id']
-            ];
-
-            $this->grous->insert($data_group);
-
-            $grous = $this->grous->findAll();
-
-            $user_id = [];
-            foreach ($grous as $row) {
-                $user_id[] = $row['user_id'];
-            }
-
-            $idUsers = [];
-            foreach ($this->user->get()->getResultArray() as $row) {
-                if (!in_array($row['id'], $user_id)) {
-                    $idUsers[] = $row['id'];
-                }
-            }
-
-            $data = [
-                'title' => 'User',
-                'idUsers' => $idUsers,
-                'user' => $this->user->get()->getResultArray(),
-                'allUsers' => $this->user->data_users()
-            ];
-
-            $msg = [
-                'data' => view('user / data', $data)
-            ];
-
-            return $this->response->setJSON($msg);
-        } else {
-            return redirect()->back()->with('error', 'Forbidden');
-        }
     }
 }

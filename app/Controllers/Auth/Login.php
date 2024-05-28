@@ -2,10 +2,9 @@
 
 namespace App\Controllers\Auth;
 
-use App\Config\Auth as AuthAlias;
 use Myth\Auth\Controllers\AuthController as MythAuthController;
 
-class LoginController extends MythAuthController
+class Login extends MythAuthController
 {
     protected $auth;
     protected $config;
@@ -65,7 +64,7 @@ class LoginController extends MythAuthController
 
         if (in_groups('admin')) {
             $redirectURL = route_to('indexAdmin');
-        } elseif(in_groups('cashier')) {
+        } elseif (in_groups('cashier')) {
             $redirectURL = route_to('indexCashier');
         } else {
             $redirectURL = route_to('indexCustomer');
@@ -74,4 +73,14 @@ class LoginController extends MythAuthController
 
         return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.loginSuccess'));
     }
+
+    public function logout()
+    {
+        if ($this->auth->check()) {
+            $this->auth->logout();
+        }
+
+        return redirect()->to(route_to('formLogin'));
+    }
+
 }

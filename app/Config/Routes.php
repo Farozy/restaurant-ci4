@@ -20,9 +20,11 @@ $routes->group('/', static function ($routes) {
     $routes->get('access-denied', 'Home::accessDenied');
 });
 
-$routes->group('login', static function ($routes) {
-    $routes->get('', 'Auth\LoginController::index', ['as' => 'formLogin']);
-    $routes->post('attempt-login', 'Auth\LoginController::attemptLogin', ['as' => 'attemptLogin']);
+// Login & Logout
+$routes->group('', static function ($routes) {
+    $routes->get('login', 'Auth\Login::index', ['as' => 'formLogin']);
+    $routes->post('attempt-login', 'Auth\Login::attemptLogin', ['as' => 'attemptLogin']);
+    $routes->get('logout', 'Auth\Login::logout', ['as' => 'logout']);
 });
 //$routes->get('register', 'AuthController::register');
 //$routes->post('register', 'AuthController::attemptRegister');
@@ -49,7 +51,7 @@ $routes->group('event-date', ['filter' => 'role:admin'], static function ($route
     $routes->post('delete-event-date', 'Event::deleteEventDate', ['as' => 'deleteEventDate']);
 });
 
-// cashier
+// Cashier
 $routes->group('cashier', ['filter' => 'role:cashier'], static function ($routes) {
     $routes->get('/', 'Cashier::index', ['as' => 'indexCashier']);
 

@@ -88,14 +88,14 @@
                                  alt="image" class="img-fluid rounded" width="170" style="height: 150px">
                             <input type="hidden" name="id_employee" id="id_employee">
                         </div>
-                        <div class="mb-3 mt-2">
+                        <div class="mb-3 mt-2 text-center">
                             <input type="file"
                                    class="form-control <?= $validation->hasError('image') ? 'is-invalid' : '' ?>"
                                    id="btnImage" name="image" style="display:none">
                             <button type="button" class="btn btn-secondary btn-sm mx-auto d-block"
                                     onclick="document.getElementById('btnImage').click()">Pilih Foto
                             </button>
-                            <small class="<?= $validation->hasError('image') ? 'text-danger' : '' ?> errorFoto">
+                            <small class="<?= $validation->hasError('image') ? 'text-danger text-center' : '' ?> errorFoto">
                                 <?= $validation->getError('image') ?>
                             </small>
                         </div>

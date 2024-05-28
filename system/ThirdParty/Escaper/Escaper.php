@@ -404,7 +404,7 @@ class Escaper
         $result = mb_convert_encoding($string, $to, $from);
 
         if ($result === false) {
-            return ''; // return non-fatal blank string on encoding errors from user
+            return ''; // return non-fatal blank string on encoding errors from users
         }
 
         return $result;

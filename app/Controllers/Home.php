@@ -6,10 +6,7 @@ class Home extends BaseController
 {
     public function index()
     {
-        return redirect()->back()->with('error', 'Forbidden');
-        // $data = ['title' => 'Home'];
-        // return view('templates/main', $data);
-        // return view('welcome_message');
+        return view('home/index', ['title' => 'Home']);
     }
     public function accessDenied()
     {

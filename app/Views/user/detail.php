@@ -22,7 +22,7 @@
                             </tr>
                             <tr>
                                 <th>Role</th>
-                                <td><?= ucwords(str_replace('_', ' ', $user->name)) ?></td>
+                                <td><?= ucwords(str_replace('_', ' ', $user->roleName)) ?></td>
                             </tr>
                             <tr>
                                 <th>Status User</th>

@@ -14,7 +14,7 @@
     </style>
     <div class="container-fluid">
         <div class="card">
-            <?= form_open_multipart(route_to('updateUser'), [], ['id' => $user->user_id]); ?>
+            <?= form_open_multipart(route_to('updateUser'), [], ['id' => $user->id]); ?>
             <?= csrf_field(); ?>
             <div class="card-body">
                 <div class="row">
@@ -69,17 +69,9 @@
                     </div>
                     <div class="col-md-3 mx-auto">
                         <h5 class="header-title font-weight-bold">Foto</h5>
-                        <div class="text-center">
+                        <div class="text-center mb-3">
                             <img id="previewImage" src="<?= base_url('/uploads/images/user'); ?>/<?= $user->image ?>"
                                  alt="image" class="img-fluid rounded" width="170" style="height: 150px">
-                        </div>
-                        <div class="mb-3 mt-2">
-                            <input type="file"
-                                   class="form-control <?= $validation->hasError('image') ? 'is-invalid' : '' ?>"
-                                   id="buttonImage" name="image" style="display:none">
-                            <small class="<?= $validation->hasError('image') ? 'text-danger' : '' ?> errorFoto">
-                                <?= $validation->getError('image') ?>
-                            </small>
                         </div>
                         <div class="mb-3 text-center">
                             <a href="<?= route_to('indexUser') ?>" class="btn btn-danger"><i class="fas fa-reply"></i>

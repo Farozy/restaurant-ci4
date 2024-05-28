@@ -4,28 +4,16 @@ namespace App\Validation;
 
 class UserValidation
 {
-    public function rules($email = null, $isUpdate = false)
+    public function rules($isUpdate = false)
     {
-        if (empty($email)) {
-            $rules = [
-                'employee_id' => 'required',
-                'group_id' => 'required'
-            ];
-        }
-
-        $imageRules = [];
+        $rules = ['group_id' => 'required'];
 
         if (!$isUpdate) {
-            $imageRules[] = 'uploaded[image]';
+            $rules['employee_id'] = 'required';
+            $rules['image'] = ['max_size[image,1024]|is_image[image]|mime_in[image,image/jpg,image/jpeg,image/png]'];
         }
 
-        $imageRules[] = 'max_size[image,1024]';
-        $imageRules[] = 'is_image[image]';
-        $imageRules[] = 'mime_in[image,image/jpg,image/jpeg,image/png]';
-
-        $rules['image'] = implode('|', $imageRules);
-
-        return array_filter($rules);
+        return $rules;
     }
 
     public array $messages = [

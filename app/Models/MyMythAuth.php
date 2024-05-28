@@ -27,7 +27,7 @@ class MyMythAuth extends Model
         }
 
         return $this->db->table('users as a')
-            ->select('a.*, a.image as userImage, b.*, d.*, e.name as employeeName')
+            ->select('a.*, a.image as userImage, b.*, c.name as roleName, d.*, e.name as employeeName')
             ->where('a.id', $id)
             ->join('auth_groups_users as b', 'b.user_id = a.id')
             ->join('auth_groups as c', 'c.id = b.group_id')
