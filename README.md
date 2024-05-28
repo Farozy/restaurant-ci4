@@ -7,14 +7,17 @@ Aplikasi kasir restoran digunakan untuk menunjang kelancaran dari transaksi penj
 ## Petunjuk penginstalan (PHP 7.4)
 
 - Silahkan clone atau download projectnya terlebih dahulu
-- Buat database baru dengan nama 'ci_restaurant'
-- Import database yang sudah ada di projectnya 'ci_restaurant.sql'
 - Ganti nama file .env_copy menjadi .env kemudian edit dan sesuaikan nama database, username dan password
-- jalankan project dengan 'php spark serve'
-- http://localhost:8080 (untuk sementara tidak ada isinya)
-- Langsung saja http://localhost:8080/login
+- Buat database baru sesuai dengan nama database di .env
+- Bukan terminal / cmd, lalu ketikan dan jalankan secara berurutan
+   - composer install
+   - php spark migrate --all
+   - php spark db:seed AuthSeeder
+   - php spark db:seed UserSeeder
+   - Buka text file (petunjuk_memasukkan_data) sebagai contoh
+- jalankan project dengan php spark serve
 - Masukkan username: admin & password: admin
-- Untuk masuk ke route kasir, harus membuat data karyawan terlebih dahulu
+- Untuk masuk ke role kasir, harus membuat data karyawan terlebih dahulu
 - Kemudian tentukan role di menu User
 
 ## Kritik & Saran
