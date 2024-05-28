@@ -20,6 +20,10 @@ class CreateTransactionsTable extends Migration
                 'constraint' => 5,
                 'unsigned' => true
             ],
+            'code' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255'
+            ],
             'order' => [
                 'type' => 'VARCHAR',
                 'constraint' => '255'

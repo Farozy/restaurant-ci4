@@ -8,7 +8,17 @@ INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (2, 'Minuman', '2024-05-28 07:18:35', '2024-05-28 07:18:35'),
 (4, 'Snacks', '2024-05-28 07:18:51', '2024-05-28 07:18:51');
 
-Setelah dicopy / disalin silahkan klik tombol send / kirim
+Kemudin klik tombol send / kirim
+
+Setelah selesai table cateogries
+Cari table distributions dan buka, lalu click menu SQL dan copy semua script dibawah
+
+INSERT INTO `distributions` (`id`, `name`, `cost`, `created_at`, `updated_at`) VALUES
+(1, 'Dine In', '0', '2024-04-25 20:50:43', '2024-05-23 04:21:21'),
+(2, 'Take Away', '2000', '2024-04-25 20:51:48', '2024-04-25 20:51:48'),
+(3, 'Gojek/Grap/Shopee', '3000', '2024-04-25 20:53:45', '2024-04-25 20:53:45');
+
+Kemduain klik tombol send / kirim
 
 Setelah selesai tabel categories
 Cari tabel menus dan buka, lalu click menu SQL dan copy semua script dibawah
@@ -44,4 +54,4 @@ INSERT INTO `menus` (`id`, `name`, `category_id`, `stock`, `cost`, `sell`, `disc
 (32, 'Aneka Menu dari Kuliner Soloo', 4, 40, '10000', '25000', 10, '1714752533_5f461f6ba243f2d1f1a0.jpeg', '2024-05-03 23:08:53', '2024-05-03 23:08:53'),
 (35, 'cobada', 2, 10, '1000', '1500', 0, '1716735587_2e3953c6824cd0779443.png', '2024-05-26 21:59:47', '2024-05-26 22:26:14');
 
-Setelah dicopy / disalin silahkan klik tombol send / kirim
+SKemudian klik tombol send / kirim

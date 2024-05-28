@@ -51,7 +51,7 @@ class Order extends BaseController
             'menuId' => $input['menu_id'],
             'amount' => $input['amount'],
             'request' => $input['request'],
-            'date' => date('d') . ' - ' . month(date('m')) . ' - ' . date('Y'),
+            'date' => date('d') . '-' . month(date('m')) . '-' . date('Y'),
             'name' => !empty($name) ? $name : 'Restoran',
             'address' => $this->profile->where('id', 2)->first(),
             'district' => $this->profile->where('id', 3)->first(),
